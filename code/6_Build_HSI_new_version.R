@@ -78,8 +78,8 @@ summary(lob.fl$mean_bt)
 # # PATH_OUT <- "output/cusk_fall/"
 # # 
 # 
-# data <- lob.fl
-# PATH_OUT <- "output/lobster_fall/"
+data <- lob.fl
+PATH_OUT <- "output/lobster_fall/"
 # 
 ##########################
 # Define SI for each varaible 
@@ -199,31 +199,27 @@ for (i in 1:length(x)){
   tstemp<-tstemp[which(tstemp$salinity_b>21.27),]
   
   tstemp<-tstemp[!is.na(tstemp$depth),]
-  # tstemp<-tstemp[which(tstemp$depth < 0 & tstemp$depth > -877),]
   
-  #adjust fvcom data range 
+  
+ 
   #sediment
-  #par(mfrow=c(1,2))
   summary(data$sediment)
   summary(tstemp$sediment)
-  #tstemp = tstemp[ which( ! tstemp$sediment %in% "gr"), ]
+
   
   #bottom temperature
   summary(data$mean_bt) 
   summary(tstemp$temperature_b)
-  #tstemp = tstemp[which(tstemp$temperature_b < 24),]
-  #tstemp = tstemp[which(tstemp$temperature_b > 7.5),]
+ 
   
   #bottom salinity
   summary(data$mean_bs)
   summary(tstemp$salinity_b)
-  # tstemp = tstemp[which(tstemp$temperature_b >24),]
-  # tstemp = tstemp[which(tstemp$temperature_b > 7.5),]
+
   
   #depth
   summary(data$depth) #depth
   summary(tstemp$depth)
-  # tstemp = tstemp[!is.na(tstemp$depth),]
   tstemp = tstemp[which(tstemp$depth <= -2),]
   
   #SI_Sediment
