@@ -17,12 +17,12 @@ library(Metrics)
 ################################
 #load SPRING data 
 ################################
-# cusk.sp <- read.csv("data/HSI_data/cusk_spring_3mon_BT_BS_grid_abundance.csv")
-# summary(cusk.sp)
-# cusk.sp<-cusk.sp[!is.na(cusk.sp$depth) ,]
-# summary(cusk.sp$depth)
-# summary(cusk.sp$mean_bs)
-# summary(cusk.sp$mean_bt)
+cusk.sp <- read.csv("data/HSI_data/cusk_spring_3mon_BT_BS_grid_abundance.csv")
+summary(cusk.sp)
+cusk.sp<-cusk.sp[!is.na(cusk.sp$depth) ,]
+summary(cusk.sp$depth)
+summary(cusk.sp$mean_bs)
+summary(cusk.sp$mean_bt)
 # 
 
 # lob.sp <- read.csv("data/HSI_data/lob_spring_3mon_grid_abndance.csv")
@@ -47,14 +47,14 @@ library(Metrics)
 
 
 #use for lobster HSI
-lob.fl <- read.csv("data/HSI_data/lob_fall_3mon_grid_abndance.csv")
-summary(lob.fl)
-lob.fl <- lob.fl %>%
-  filter(!is.na(depth),
-         depth <= 0)
-summary(lob.fl$depth)
-summary(lob.fl$mean_bs)
-summary(lob.fl$mean_bt)
+# lob.fl <- read.csv("data/HSI_data/lob_fall_3mon_grid_abndance.csv")
+# summary(lob.fl)
+# lob.fl <- lob.fl %>%
+#   filter(!is.na(depth),
+#          depth <= 0)
+# summary(lob.fl$depth)
+# summary(lob.fl$mean_bs)
+# summary(lob.fl$mean_bt)
 
 ##########################
 #choose data
@@ -62,8 +62,8 @@ summary(lob.fl$mean_bt)
 
 # #SET VARIABLES FOR SPRING
 
-# data <- cusk.sp
-# PATH_OUT <- "output/cusk_spring/"
+data <- cusk.sp
+PATH_OUT <- "output/cusk_spring/"
 
 # data <- lob.sp
 # PATH_OUT <- "output/lobster_spring/"
@@ -78,13 +78,14 @@ summary(lob.fl$mean_bt)
 # # PATH_OUT <- "output/cusk_fall/"
 # # 
 # 
-data <- lob.fl
-PATH_OUT <- "output/lobster_fall/"
+# data <- lob.fl
+# PATH_OUT <- "output/lobster_fall/"
 # 
 ##########################
 # Define SI for each varaible 
 ##########################
 par(mfrow = c(1,2))
+
 #SI_temperature
 temp = data$mean_bt
 temp = as.numeric(as.character(temp))
@@ -95,15 +96,10 @@ data$temperature_bins = cut(temp, breaks = temperature_int$brks)
 temperature = aggregate(data$mean_abun ~ temperature_bins, data = data, FUN = "mean")
 colnames(temperature)[1] = "temperature_bins"
 colnames(temperature)[2] = "abundance"
-# temperature$abundance = sort(temperature$abundance)
 temperature$SI_temp = ((temperature$abundance - min(temperature[,2]))/(max(temperature[,2]) - min(temperature[,2])))
 temperature_axis = temperature$temperature_bins
 plot(temperature$temperature_bins, temperature$SI_temp, type = "h", ylab = "SI", xlab = "Temperature")
-# temperature$bin = 1:length(temperature[,1])
-# g = gam(abundance ~ s(bin), data = temperature)
-# temperature$abundance = predict(g, newdata = temperature, scale = "response")
-# temperature$SI_temp = ((temperature$abundance - min(temperature[,2]))/(max(temperature[,2]) - min(temperature[,2])))
-# plot(temperature$temperature_bins, temperature$SI_temp)
+
 
 #SI_depth
 dep = data$depth
@@ -115,15 +111,9 @@ data$depth_bins = cut(dep, breaks = depth_int$brks)
 depth = aggregate(data$mean_abun ~ depth_bins, data = data, FUN = "mean")
 colnames(depth)[1] = "depth_bins"
 colnames(depth)[2] = "abundance"
-# depth$abundance = sort(depth$abundance, decreasing = T)
 depth$SI_depth = ((depth$abundance - min(depth[,2]))/(max(depth[,2]) - min(depth[,2])))
 depth_axis = depth$depth_bins
 plot(depth$depth_bins, depth$SI_depth)
-# depth$bin = 1:length(depth[,1])
-# g = gam(abundance ~ s(bin), data = depth)
-# depth$abundance = predict(g, newdata = depth, scale = "response")
-# depth$SI_depth = ((depth$abundance - min(depth[,2]))/(max(depth[,2]) - min(depth[,2])))
-# plot(depth$depth_bins, depth$SI_depth)
 
 # # #SI_Salinity
 sal = data$mean_bs
@@ -135,16 +125,10 @@ data$salinity_bins = cut(sal, breaks = salinity_int$brks)
 salinity = aggregate(data$mean_abun ~ salinity_bins, data = data, FUN = "mean")
 colnames(salinity)[1] = "salinity_bins"
 colnames(salinity)[2] = "abundance"
-# salinity$abundance = sort(salinity$abundance)
 salinity$SI_salinity = ((salinity$abundance - min(salinity[,2]))/(max(salinity[,2]) - min(salinity[,2])))
 salinity_axis = salinity$salinity_bins
 plot(salinity$salinity_bins, salinity$SI_salinity)
-# salinity$bin = 1:length(salinity[,1])
-# g = gam(abundance ~ s(bin), data = salinity)
-# salinity$abundance = predict(g, newdata = salinity, scale = "response")
-# salinity$SI_salinity = ((salinity$abundance - min(salinity[,2]))/(max(salinity[,2]) - min(salinity[,2])))
-# plot(salinity$salinity_bins, salinity$SI_salinity)
-# 
+ 
 #SI_Sediment
 sediment = aggregate(mean_abun ~ sediment, data = data, FUN="mean")
 colnames(sediment)[1] = "sediment"
@@ -255,7 +239,8 @@ for (i in 1:length(x)){
 
 
 ##########################
-#Cross Validation
+# Cross Validation
+# NO LONGER USING THIS CROSS-VALIDATION
 ##########################
 N = nrow(data)
 res_amm = matrix(0, ncol = 3, nrow = 100)
