@@ -80,7 +80,7 @@ plot(pr.sp$mean_t ~ pr.sp$yr,
      type = "l",lty = 2,lwd = 4,
      # ylim = c(0,12),
      ylab = "Temperature (C)",
-     xlab = "Year",main="Spring (HSI > 0.5)", 
+     xlab = "Year",main="Spring (HSI > 0)", 
      col = "#fc8d59", cex.lab = 2, cex.axis = 2, cex.main = 2)
 par(new=T)
 plot(pr.sp$prop.ovlp ~ pr.sp$yr, type="l",
@@ -114,14 +114,14 @@ mean_t_sp = ts(pr.sp$mean_t, start = 1982, end = 2013, frequency = 1)
 jpeg(filename = "figures/spring_correlation_temps.jpg", width = 9, height = 6, units = "in", res = 600)
 par(mar = c(4,4,4,1)+1)
 spring_ccf <- ccf(mean_t_sp, mean_p_sp,
-    # xlim = c(-10,0), ylim = c(-0.3, 0.3),
+    xlim = c(-10,0), ylim= c(-0.4, 0.4),
     cex.lab = 2.5, cex.axis = 2,
     ylab = "Cross-correlation",
     lwd = 2,
-    main = "Spring Temperature, HSI > 0.5")
+    main = "Spring Temperature, HSI > 0")
 dev.off()
 
-cor(pr.sp$mean_t, pr.sp$prop.ovlp) #-0.06070295
+cor(pr.sp$mean_t, pr.sp$prop.ovlp) #0.02
 
 
 ##################################################################
@@ -133,7 +133,7 @@ par(mar=c(5,5,2,5))
 plot(pr.fl$mean_t ~ pr.fl$yr,
      type = "l",lty = 2,lwd = 4,
      ylab = "Temperature (C)",
-     xlab = "Year",main="Fall (HSI > 0.3)", 
+     xlab = "Year",main="Fall (HSI > 0)", 
      col = "#fc8d59", cex.lab = 2, cex.axis = 2, cex.main = 2)
 par(new=T)
 plot(pr.fl$prop.ovlp ~ pr.fl$yr,
@@ -160,16 +160,15 @@ mean_t_fl = ts(pr.fl$mean_t, start = 1982, end = 2013, frequency = 1)
 #cross-correlation temperature and proportion overlap
 ##################################################################
 jpeg(filename = "figures/fall_correlation_temp_prop_overlp.jpg", width = 9, height = 6, units = "in", res = 600)
-
 par(mar = c(4,4,4,1)+1)
 ccf(mean_t_fl, mean_p_fl,
     cex.lab = 2.5, cex.axis = 2, cex.main = 4,
     ylab = "Cross-correlation",
-    # xlim = c(-10,0),
+    xlim = c(-10,0), ylim = c(-0.4, 0.4),
     lwd = 2,
-    main = "Fall BT, HSI > 0.3", cex = 2)
+    main = "Fall BT, HSI > 0", cex = 2)
 dev.off()
 
 
-cor(pr.fl$mean_t, pr.fl$prop.ovlp) #0.031
+cor(pr.fl$mean_t, pr.fl$prop.ovlp) #0.16
 
