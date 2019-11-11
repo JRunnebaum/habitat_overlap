@@ -11,6 +11,7 @@ library(ggplot2)
 library(cowplot)
 library(RColorBrewer)
 library(ggthemes)
+library(mapproj)
 
 ##########################
 #set figure attributes
@@ -74,26 +75,27 @@ fall_ll <- cusk_ll %>%
   filter(month == 9 | month == 10 | month == 11)
 
 
-lob_fall <- read.csv("data/lobster_survey_data/fall_lobster_all.csv") %>% 
+lob_fall <- read.csv("data/lobster_data_for_VAST/fall_lobster_all.csv") %>% 
   mutate(survey = dplyr::recode_factor(survey, "NMFS" = "NEFSC"))
 
-lob_spring <- read.csv("data/lobster_survey_data/spring_lobster_all.csv") %>% 
+lob_spring <- read.csv("data/lobster_data_for_VAST/spring_lobster_all.csv") %>% 
   mutate(survey = dplyr::recode_factor(survey, "NMFS" = "NEFSC"))
 
 coast <- readOGR(dsn='data/gshhg-shp-2.3.4/GSHHS_shp/i', layer='GSHHS_i_L1')
 coast_df <- fortify(coast)
 
-stat_area <- rgdal::readOGR("data/Statistical_Area/Statistical_Area.shp")
-stat_area_df <- fortify(stat_area)
-
-gom_gb <- subset(stat_area, Id == 464 | Id == 465 | Id == 466 | Id == 467 |
-                   Id == 511 | Id == 512 | Id == 513 | Id == 514 | 
-                   Id == 515 | Id == 521 | Id == 522 | Id == 525 | 
-                   Id == 526 | Id == 551 | Id == 561 | Id == 552 |
-                   Id == 562)
-
-
-gom_gb_df <- fortify(gom_gb, region = "Id")
+#reviewer recommended not including stat areas on the plot
+# stat_area <- rgdal::readOGR("data/Statistical_Area/Statistical_Area.shp")
+# stat_area_df <- fortify(stat_area)
+# 
+# gom_gb <- subset(stat_area, Id == 464 | Id == 465 | Id == 466 | Id == 467 |
+#                    Id == 511 | Id == 512 | Id == 513 | Id == 514 | 
+#                    Id == 515 | Id == 521 | Id == 522 | Id == 525 | 
+#                    Id == 526 | Id == 551 | Id == 561 | Id == 552 |
+#                    Id == 562)
+# 
+# 
+# gom_gb_df <- fortify(gom_gb, region = "Id")
 
 ##########################
 #color palete
@@ -115,7 +117,7 @@ pal <- ggthemes::canva_pal("Pool party")(4)
 idList <- unique(gom_gb$Id)
 centroids.df <-  as.data.frame(coordinates(gom_gb))
 names(centroids.df) <- c("long", "lat")
-stat_area_id <- data.frame(id = idList,  centroids.df)
+# stat_area_id <- data.frame(id = idList,  centroids.df)
 
 fall_plot <- ggplot() +
   geom_point(data = lob_fall, aes(lon, lat, color = survey)) +
@@ -123,9 +125,9 @@ fall_plot <- ggplot() +
   geom_polygon(data = coast_df , aes(long, lat, group = group),
                fill = NA, colour = "black") + 
   coord_map(xlim = c(-71.5,-65),  ylim = c(39.5,45.5)) +
-  geom_polygon(data = gom_gb_df, aes(long, lat, group = group),
-               fill = NA, colour = "black") + 
-  geom_text(data = stat_area_id, aes(label = id, x = long, y = lat), size = 5, fontface='bold') +
+  # geom_polygon(data = gom_gb_df, aes(long, lat, group = group),
+  #              fill = NA, colour = "black") + 
+  # geom_text(data = stat_area_id, aes(label = id, x = long, y = lat), size = 5, fontface='bold') +
   theme(legend.text = element_text(size = 16))+
   scale_y_continuous(breaks = round(seq(39.5, 45.5, length.out = 10),0), 
                      labels = round(seq(39.5, 45.5, length.out = 10),0)) +
@@ -141,10 +143,9 @@ spring_plot <- ggplot() +
   geom_polygon(data = coast_df , aes(long, lat, group = group),
                fill = NA, colour = "black") + 
   coord_map(xlim = c(-71.5,-65),  ylim = c(39.5,45.5)) +
-  geom_polygon(data = gom_gb_df, aes(long, lat, group = group),
-               fill = NA, colour = "black") + 
-  geom_text(data = stat_area_id, aes(label = id, x = long, y = lat), size = 5, fontface='bold') +
-  
+  # geom_polygon(data = gom_gb_df, aes(long, lat, group = group),
+  #              fill = NA, colour = "black") + 
+  # geom_text(data = stat_area_id, aes(label = id, x = long, y = lat), size = 5, fontface='bold') +
   theme(legend.text = element_text(size = 16)) +
   scale_y_continuous(breaks = round(seq(39.5, 45.5, length.out = 10),0), 
                      labels = round(seq(39.5, 45.5, length.out = 10),0)) +
